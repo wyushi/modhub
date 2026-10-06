@@ -1,0 +1,6 @@
+{
+  "name": "modhub",
+  "version": "0.1.0",
+  "description": "The Hub: hosts other mods and chooses what each shows (pane, band, toasts, status)",
+  "types": "./types/index.d.ts"
+}

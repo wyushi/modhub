@@ -1,0 +1,15 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "modhub",
+  "description": "The Hub: a Claude Code mod that hosts other mods in one pane",
+  "owner": {
+    "name": "wyushi"
+  },
+  "plugins": [
+    {
+      "name": "modhub-kit",
+      "description": "Builds the Hub: hosts other mods and chooses what each shows (pane, band, toasts, status)",
+      "source": "./"
+    }
+  ]
+}
