@@ -199,3 +199,7 @@ git clone https://github.com/wyushi/modhub.git && cd modhub
 node sync.mjs --home ../.hub-dev     # build an empty Hub into ../.hub-dev/hub
 MODHUB_HOME=$PWD/../.hub-dev claude --plugin-dir . --plugin-dir ../.hub-dev/hub
 ```
+
+## License
+
+MIT, see [LICENSE](LICENSE). The mods under "Mods to try" are not part of this repo and carry their own licenses.
