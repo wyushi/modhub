@@ -186,7 +186,7 @@ async function drawSlot(
   return (
     <Box flexDirection="column" width={width}>
       <Box marginBottom={1}>
-        <Text>
+        <Text wrap="truncate-end">
           <Text dimColor>{header.before}</Text>
           <Text bold>{header.title}</Text>
           <Text dimColor>{header.after}</Text>
@@ -200,7 +200,8 @@ async function drawSlot(
 }
 
 // The slot header: a rule with the title set into it, `─ Title ─────`, exactly `width`
-// columns. A title too long for the row is cut with `…`.
+// columns. A title too long for the row is cut with `…`. Where the font draws `─` wider than
+// a column (the desktop app), the outer Text truncates the rule instead of wrapping it.
 function headerLine(title: string, width: number) {
   const total = Math.max(1, width)
   // `─ ` + title + ` ` + fill (at least one `─`)
