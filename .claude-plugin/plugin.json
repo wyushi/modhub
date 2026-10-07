@@ -1,6 +1,6 @@
 {
   "name": "modhub-kit",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "description": "Builds the Hub, a Claude Code mod that hosts other mods in one pane, into ~/.claude/modhub",
   "author": { "name": "wyushi" },
   "license": "MIT"

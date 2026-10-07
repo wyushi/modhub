@@ -38,6 +38,8 @@ That's it. Close it with `Ctrl+X` then `X`. Resize it with `Ctrl+X` then an arro
 
 > Tip: in fullscreen (`/tui fullscreen`, 110+ columns wide) the Hub docks on the right like the screenshot. Otherwise it opens above the prompt.
 
+In the Claude desktop app, `/hub` works too. The command list may say "/hub isn't a command here"; send it anyway.
+
 ## Everyday commands
 
 | You want to… | Run |

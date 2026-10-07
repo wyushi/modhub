@@ -43,8 +43,14 @@ test('the Hub draws every slot (or says it is empty), registers the enabled comm
     for (const slot of LAYOUT.slots) {
       expect(await ui.find({ type: 'Text', text: slot.title })).toBeDefined()
       // the title sits in a rule that fills its row: `─ Title ─────`
-      expect(await ui.find({ type: 'Text', text: /^─ $/ })).toBeDefined()
-      expect(await ui.find({ type: 'Text', text: /^ ─+$/ })).toBeDefined()
+      if (surface === 'terminal') {
+        expect(await ui.find({ type: 'Text', text: /^─ $/ })).toBeDefined()
+        expect(await ui.find({ type: 'Text', text: /^ ─+$/ })).toBeDefined()
+      } else {
+        // other surfaces: a plain `— Title`, no rule
+        expect(await ui.find({ type: 'Text', text: /^— $/ })).toBeDefined()
+        expect(await ui.find({ type: 'Text', text: /─/ })).toBeUndefined()
+      }
     }
     if (LAYOUT.slots.some(slot => slot.mod === 'usage-meter')) {
       const bar = await ui.find({ type: 'Text', text: /^[█░]+$/ })

@@ -181,16 +181,25 @@ async function drawSlot(
     }
   }
 
+  // Only the terminal counts columns; other surfaces (or an old engine without `surface`) get a plain title.
+  const ruled = e.surface === undefined || e.surface === 'terminal'
   const header = headerLine(slot.title, width)
 
   return (
     <Box flexDirection="column" width={width}>
       <Box marginBottom={1}>
-        <Text wrap="truncate-end">
-          <Text dimColor>{header.before}</Text>
-          <Text bold>{header.title}</Text>
-          <Text dimColor>{header.after}</Text>
-        </Text>
+        {ruled ? (
+          <Text wrap="truncate-end">
+            <Text dimColor>{header.before}</Text>
+            <Text bold>{header.title}</Text>
+            <Text dimColor>{header.after}</Text>
+          </Text>
+        ) : (
+          <Text wrap="truncate-end">
+            <Text dimColor>{'— '}</Text>
+            <Text bold>{slot.title}</Text>
+          </Text>
+        )}
       </Box>
       <Box paddingX={SLOT_PAD} flexDirection="column">
         {body}
@@ -200,8 +209,9 @@ async function drawSlot(
 }
 
 // The slot header: a rule with the title set into it, `─ Title ─────`, exactly `width`
-// columns. A title too long for the row is cut with `…`. Where the font draws `─` wider than
-// a column (the desktop app), the outer Text truncates the rule instead of wrapping it.
+// columns. A title too long for the row is cut with `…`. The rule is terminal-only: other
+// surfaces (the desktop app) use a proportional font, so a column-counted rule overflows and
+// wraps there. They get `— Title` instead (see drawSlot).
 function headerLine(title: string, width: number) {
   const total = Math.max(1, width)
   // `─ ` + title + ` ` + fill (at least one `─`)
