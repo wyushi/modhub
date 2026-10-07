@@ -8,6 +8,7 @@ import { MODS } from './mods'
 
 const LAYOUT_PANE = 'hub'
 const LAYOUT_TITLE = 'Hub'
+const SLOT_PAD = 1
 const GAP = 2
 const BAND_KEY = keyOf('ui.render', { component: 'AbovePrompt' })
 const SPINNER_KEY = keyOf('ui.render', { component: 'Spinner' })
@@ -145,6 +146,8 @@ async function drawSlot(
   width: number,
 ) {
   const { Box, Text } = $.ui.resolve(e)
+  // The body sits SLOT_PAD columns in from each side; the header rule spans the full width.
+  const innerWidth = Math.max(1, width - 2 * SLOT_PAD)
   const mod = mods.find(one => one.name === slot.mod)
   const hook: AnyHook | undefined = mod?.panes.get(slot.pane)
   let body: unknown
@@ -155,11 +158,11 @@ async function drawSlot(
       const slotEvent = {
         ...e,
         requestId: slot.pane,
-        props: { ...e.props, title: slot.title, bodyColumns: width },
+        props: { ...e.props, title: slot.title, bodyColumns: innerWidth },
         viewport:
           e.viewport === undefined
             ? undefined
-            : { ...e.viewport, columns: width, rows: slot.rows ?? e.viewport.rows },
+            : { ...e.viewport, columns: innerWidth, rows: slot.rows ?? e.viewport.rows },
       }
       const nothing = Object.assign(async () => undefined, next)
       const tree = await hook(hostedView($, mod), slotEvent, nothing)
@@ -178,14 +181,35 @@ async function drawSlot(
     }
   }
 
+  const header = headerLine(slot.title, width)
+
   return (
     <Box flexDirection="column" width={width}>
-      <Text bold underline>
-        {slot.title}
-      </Text>
-      {body}
+      <Box marginBottom={1}>
+        <Text>
+          <Text dimColor>{header.before}</Text>
+          <Text bold>{header.title}</Text>
+          <Text dimColor>{header.after}</Text>
+        </Text>
+      </Box>
+      <Box paddingX={SLOT_PAD} flexDirection="column">
+        {body}
+      </Box>
     </Box>
   )
+}
+
+// The slot header: a rule with the title set into it, `─ Title ─────`, exactly `width`
+// columns. A title too long for the row is cut with `…`.
+function headerLine(title: string, width: number) {
+  const total = Math.max(1, width)
+  // `─ ` + title + ` ` + fill (at least one `─`)
+  const room = total - 2 - 1 - 1
+  if (room < 1) return { before: '─'.repeat(total), title: '', after: '' }
+  const chars = Array.from(title)
+  const shown = chars.length <= room ? title : `${chars.slice(0, room - 1).join('')}…`
+  const fill = total - 2 - Array.from(shown).length - 1
+  return { before: '─ ', title: shown, after: ` ${'─'.repeat(fill)}` }
 }
 
 export const register: Register = on => {
